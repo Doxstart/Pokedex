@@ -38,7 +38,8 @@ function addPokeData(data){
 
     for (let i = 0; i < data.length; i++) {
         const element = data[i];
-        const newPokemon = new Pokemon(element.name);
+        const newPokemon = new Pokemon(element.name, element.abilities);
+        console.log(newPokemon);
         pokemonCollection.addPokemon(newPokemon);
 
     }
@@ -51,8 +52,11 @@ function displayPokeDex(){
         const pokemon = pokemonCollection.pokemonArray[i];
         container.innerHTML += `
                 <div>
-                    <span>${pokemon.name}</span>
+                    <span><strong><a href="./detail.html?pokemon=${pokemon.name}">${pokemon.name}</a></strong></span>
                 </div>
         ` 
     }
 }
+
+
+

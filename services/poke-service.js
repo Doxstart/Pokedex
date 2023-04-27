@@ -3,7 +3,7 @@ class PokeService{
     static POKE_URL = 'https://pokeapi.co/api/v2/pokemon'
 
     static getNextPokemon(page){
-        if (page === undefined) {
+        if (page === undefined || page.next === null) {
             return fetch(this.POKE_URL).then(resp => resp.json());
         } else {
             return fetch(page.next).then(resp => resp.json());
@@ -18,4 +18,8 @@ class PokeService{
         }
     }
 
+    static getDetail(name){
+        const url = this.POKE_URL + '/' + name;
+        return fetch(url).then(resp => resp.json());
+    }
 }
