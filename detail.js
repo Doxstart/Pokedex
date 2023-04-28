@@ -10,38 +10,52 @@ const pokemonName = urlSearchParams.get('pokemon');
 
 console.log(pokemonName);
 
-//Buono
-// PokeService.getDetail(pokemonName).then(pokemon => {
-//     console.log(pokemon);
-//     const myPokemon = new Pokemon(pokemon.name);
-//     for (let i = 0; i < pokemon.abilities.length; i++) {
-//         const abilityObject = pokemon.abilities[i];
-//         myPokemon.addAbilities(abilityObject.ability.name);
-//     }
-//     displayAbilities(myPokemon);
-// })
+PokeService.getDetail(pokemonName).then(pokemonObject => {
+    console.log(pokemonObject);
+    
+    const newPokemon = createNewPokemon(pokemonObject);
 
-PokeService.getDetail(pokemonName).then(pokemon => {
-    console.log(pokemon);
-    const myPokemon = new Pokemon(pokemon.name);
-    for (let i = 0; i < pokemon.name.length; i++) {
-        const abilityObject = pokemon.name[i];
-        myPokemon.addAbilities(abilityObject.name);
-    }
-    displayAbilities(myPokemon);
+    displayPokemon(newPokemon);
 })
 
-function displayAbilities(myPokemon){
-    const container2 = document.getElementById('pokemon-name');
+function displayPokemon(pokemon){
+    document.getElementById('pokemon-name').innerHTML = pokemon.name
+    console.log(pokemon);
 
-    container2.innerHTML =``;
-    for(let i = 0; i < myPokemon.length; i++) {
-        const pokemon = myPokemon[i];
-        console.log(pokemon);
-        container2.innerHTML += `
-                <div>
-                    <span><strong>${pokemon.name}</strong></span>
-                </div>
-        ` 
+    const statsContainer = document.getElementById('pokemon-stats');
+    for (const stat of pokemon.stats){
+        statsContainer.innerHTML += `<li><strong>${stat.name}</strong> ${stat.baseValue}</li>`
     }
+
+    const abilitiesContainer = document.getElementById('pokemon-abilities');
+    for (const ability of pokemon.abilities){
+        abilitiesContainer.innerHTML += `<li><strong>${ability.name}</strong></li>`
+    }
+
+    const typesContainer = document.getElementById('pokemon-types');
+    for (const type of pokemon.types){
+        typesContainer.innerHTML += `<li><a href="./type.html?typeUrl=${type.url}"><strong>${type.name}</strong></a></li>`
+    }
+
+}
+
+function createNewPokemon(pokemonObject){
+    const myPokemon = new Pokemon(pokemonObject.name);
+
+    for (let i = 0; i < pokemonObject.stats.length; i++) {
+        const statObject = pokemonObject.stats[i];
+        myPokemon.addStat(statObject.stat.name, statObject.stat.baseValue);
+    }
+
+    for (let i = 0; i < pokemonObject.abilities.length; i++) {
+        const abilityObject = pokemonObject.abilities[i];
+        myPokemon.addAbilities(abilityObject.ability.name);
+    }
+
+    for (let i = 0; i < pokemonObject.types.length; i++) {
+        const typeObj = pokemonObject.types[i];
+        myPokemon.addType(typeObj.type.name, typeObj.type.url);
+    }
+
+    return myPokemon;
 }
